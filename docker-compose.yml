@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    restart: always
+    image: postgres:12.2
+    ports:
+      - "5432:5432"
+    env_file: beverage_tasting/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  web:
+    restart: always
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file: beverage_tasting/.env
+    links:
+      - db:db
+
+volumes:
+  pgdata:
